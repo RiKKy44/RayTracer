@@ -19,6 +19,7 @@ class Program
 
             for (int i = 0; i < height; i++)
             {
+                Console.Error.Write($"\rScanlines remaining: {height - i}    ");
                 for (int j = 0; j < width; j++)
                 {
                     var r = (double)i / (width - 1);
@@ -28,10 +29,12 @@ class Program
                     int ir = (int)(255.999 * r);
                     int ig = (int)(255.999 * g);
                     int bl = (int)(255.999 * b);
-                    
+
                     writer.WriteLine($"{ir} {ig} {bl}");
                 }
             }
+
+            Console.Error.Write("\nDone");
         }
     }
     
