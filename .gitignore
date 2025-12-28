@@ -489,3 +489,8 @@ $RECYCLE.BIN/
 
 # --- macOS specific ---
 .DS_Store
+
+# --- Ray Tracing Output Images---
+*.ppm
+*.png
+*.jpg
