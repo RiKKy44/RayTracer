@@ -1,6 +1,8 @@
+global using Color = RayTracer.Vec3;
+global using Point3 = RayTracer.Vec3;
 using System;
-namespace RayTracer;
 
+namespace RayTracer;
 
 public readonly struct Vec3
 {
@@ -30,32 +32,32 @@ public readonly struct Vec3
         _ => throw new IndexOutOfRangeException()
     };
 
-    public static Vec3 operator -(Vec3 v)=> new Vec3(-v.X, -v.Y, -v.Z);
+    public static Vec3 operator -(in Vec3 v)=> new Vec3(-v.X, -v.Y, -v.Z);
     
-    public static Vec3 operator +(Vec3 v1, Vec3 v2) => new Vec3(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
+    public static Vec3 operator +(in Vec3 v1, in Vec3 v2) => new Vec3(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
     
-    public static Vec3 operator -(Vec3 v1, Vec3 v2)=> new Vec3(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);
+    public static Vec3 operator -(in Vec3 v1, in Vec3 v2)=> new Vec3(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);
     //scalar multiplication
-    public static Vec3 operator *(Vec3 v, double s) => new Vec3(v.X * s, v.Y * s, v.Z * s);
+    public static Vec3 operator *(in Vec3 v, double s) => new Vec3(v.X * s, v.Y * s, v.Z * s);
     
     //commutative scalar multiplication
-    public static Vec3 operator *(double s, Vec3 v) => v * s;
+    public static Vec3 operator *(double s, in Vec3 v) => v * s;
     
-    public static Vec3 operator /(Vec3 v, double s) => new Vec3(v.X / s, v.Y / s, v.Z / s);
+    public static Vec3 operator /(in Vec3 v, double s) => new Vec3(v.X / s, v.Y / s, v.Z / s);
     //hadamard product
-    public static Vec3 operator *(Vec3 v1, Vec3 v2) => new Vec3(v1.X*v2.X, v1.Y*v2.Y, v1.Z*v2.Z);
+    public static Vec3 operator *(in Vec3 v1, in Vec3 v2) => new Vec3(v1.X*v2.X, v1.Y*v2.Y, v1.Z*v2.Z);
     public double Length() => Math.Sqrt(X * X + Y * Y + Z * Z);
     
     public double LengthSquared() => X * X + Y * Y + Z * Z;
     
-    public static double Dot(Vec3 v1, Vec3 v2) => v1.X*v2.X + v1.Y*v2.Y + v1.Z*v2.Z;
+    public static double Dot(in Vec3 v1, in Vec3 v2) => v1.X*v2.X + v1.Y*v2.Y + v1.Z*v2.Z;
     
-    public static Vec3 Cross(Vec3 v1, Vec3 v2) =>
+    public static Vec3 Cross(in Vec3 v1, in Vec3 v2) =>
         new(v1.Y * v2.Z - v1.Z * v2.Y,
             v1.Z * v2.X - v1.X * v2.Z,
             v1.X * v2.Y - v1.Y * v2.X);
 
-    public static Vec3 UnitVector(Vec3 v) => v / v.Length();
+    public static Vec3 UnitVector(in Vec3 v) => v / v.Length();
 
     public override string ToString() => $"{X} {Y} {Z}";    
     
