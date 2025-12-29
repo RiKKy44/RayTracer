@@ -14,7 +14,7 @@ public static class Color
         int gbyte = (int)(g*255.999);
         int bbyte = (int)(b*255.999);
         
-        writer.WriteLine($"{rbyte} {gbyte} {bbyte}\n");
+        writer.WriteLine($"{rbyte} {gbyte} {bbyte}");
         
     }
 } 
