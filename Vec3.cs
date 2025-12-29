@@ -1,9 +1,9 @@
-global using Color = RayTracer.Vec3;
-global using Point3 = RayTracer.Vec3;
+
 using System;
 
 namespace RayTracer;
 
+//readonly to prevent compiler from making defensive copies when passing vec3 by reference
 public readonly struct Vec3
 {
     public double X { get; }
@@ -60,6 +60,4 @@ public readonly struct Vec3
     public static Vec3 UnitVector(in Vec3 v) => v / v.Length();
 
     public override string ToString() => $"{X} {Y} {Z}";    
-    
-
 }
