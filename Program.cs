@@ -6,10 +6,24 @@ namespace RayTracer;
 
 public class Program
 {
+
+    public static bool HitSphere(in Point3 center, double radius, in Ray ray)
+    {
+        Vec3 oc = center - ray.Origin;
+        var a = Vec3.Dot(ray.Direction, ray.Direction);
+        var b = -2.0 * Vec3.Dot(ray.Direction, oc);
+        var c = Vec3.Dot(oc, oc) - radius * radius;
+        var discriminant = b * b - 4 * a * c;
+        return (discriminant >= 0);
+    }
     private static Color3 RayColor(Ray ray)
     {
-        Vec3 unit_direction = Vec3.UnitVector(ray.Direction);
-        var a = 0.5 * (unit_direction.Y + 1.0);
+        if (HitSphere(new Point3(0, 0, -1),0.5, ray))
+        {
+            return new Color3(1, 0, 0);
+        }
+        Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
+        var a = 0.5 * (unitDirection.Y + 1.0);
         return (1.0-a)*new Color3(1.0,1.0,1.0)+a*new Color3(0.5,0.7,1.0);
     }
     public static void Main()
@@ -52,7 +66,7 @@ public class Program
                 Console.Error.Write($"\rScanlines remaining: {imageHeight - i} ");
                 for (int j = 0; j < imageWidth; j++)
                 {
-                    var pixelCenter = pixel00 + i * pixelDeltaU + j * pixelDeltaV;
+                    var pixelCenter = pixel00 + j * pixelDeltaU + i * pixelDeltaV;
                     var rayDirection = pixelCenter - cameraCenter;
                     Ray ray = new Ray(cameraCenter, rayDirection);
                     Color3 pixelColor = RayColor(ray);
