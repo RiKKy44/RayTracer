@@ -6,35 +6,17 @@ namespace RayTracer;
 
 public class Program
 {
-
-    public static double HitSphere(in Point3 center, double radius, in Ray ray)
+    
+    private static Color3 RayColor(Ray ray, IHittable world)
     {
-        Vec3 oc = center - ray.Origin;
-        var a = ray.Direction.LengthSquared();
-        var h = Vec3.Dot(ray.Direction, oc);
-        var c = oc.LengthSquared() - radius * radius;
-        var discriminant = h * h - a * c;
-        if (discriminant < 0)
+        HitRecord rec;
+        if (world.Hit(ray, 0, Utils.Infinity, out rec))
         {
-            return -1.0;
-        }
-        else
-        {
-            return (h - Math.Sqrt(discriminant)) / a;
-        }
-    }
-    private static Color3 RayColor(Ray ray)
-    {
-
-        var t = HitSphere(new Point3(0, 0, -1), 0.5, ray);
-        if (t > 0.0)
-        {
-            Vec3 N = Vec3.UnitVector(ray.At(t) - new Vec3(0, 0, -1));
-            return 0.5*new Color3(N.X+1, N.Y+1, N.Z+1);
+            return 0.5 * (rec.Normal + new Color3(1, 1, 1));
         }
         Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
         var a = 0.5 * (unitDirection.Y + 1.0);
-        return (1.0-a)*new Color3(1.0,1.0,1.0)+a*new Color3(0.5,0.7,1.0);
+        return (1.0 - a) * new Color3(1.0, 1.0, 1.0) + a * new Color3(0.5, 0.7, 1.0);
     }
     public static void Main()
     { 
@@ -44,7 +26,11 @@ public class Program
         // Calculate the image height, and ensure that it's at least 1.
         var imageHeight = (int)(imageWidth / aspectRatio);
         imageHeight = (imageHeight < 1) ? 1 : imageHeight;
-        
+        //world
+
+        HittableList world = new HittableList();
+        world.Add(new Sphere(new Point3(0, 0, -1), 0.5));
+        world.Add(new Sphere(new Point3(0, -100.5, -1), 100));
         //Camera
         var focalLength = 1.0;
         var viewpointHeight = 2.0;
@@ -79,7 +65,7 @@ public class Program
                     var pixelCenter = pixel00 + j * pixelDeltaU + i * pixelDeltaV;
                     var rayDirection = pixelCenter - cameraCenter;
                     Ray ray = new Ray(cameraCenter, rayDirection);
-                    Color3 pixelColor = RayColor(ray);
+                    Color3 pixelColor = RayColor(ray,world);
                     
                     Color.WriteColor(writer,pixelColor);
                 }
