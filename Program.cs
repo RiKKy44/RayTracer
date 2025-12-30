@@ -10,17 +10,17 @@ public class Program
     public static double HitSphere(in Point3 center, double radius, in Ray ray)
     {
         Vec3 oc = center - ray.Origin;
-        var a = Vec3.Dot(ray.Direction, ray.Direction);
-        var b = -2.0 * Vec3.Dot(ray.Direction, oc);
-        var c = Vec3.Dot(oc, oc) - radius * radius;
-        var discriminant = b * b - 4 * a * c;
+        var a = ray.Direction.LengthSquared();
+        var h = Vec3.Dot(ray.Direction, oc);
+        var c = oc.LengthSquared() - radius * radius;
+        var discriminant = h * h - a * c;
         if (discriminant < 0)
         {
             return -1.0;
         }
         else
         {
-            return (-b - Math.Sqrt(discriminant)) / (2.0 * a);
+            return (h - Math.Sqrt(discriminant)) / a;
         }
     }
     private static Color3 RayColor(Ray ray)
