@@ -10,7 +10,7 @@ public class Program
     private static Color3 RayColor(Ray ray, IHittable world)
     {
         HitRecord rec;
-        if (world.Hit(ray, 0, Utils.Infinity, out rec))
+        if (world.Hit(ray, new Interval(0,Utils.Infinity), out rec))
         {
             return 0.5 * (rec.Normal + new Color3(1, 1, 1));
         }

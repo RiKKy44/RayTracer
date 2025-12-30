@@ -11,7 +11,7 @@ public class Sphere: IHittable
         Radius = (radius < 0) ? 0 : radius;
     }
 
-    public bool Hit(in Ray ray, double rayTmin, double rayTmax, out HitRecord rec)
+    public bool Hit(in Ray ray, Interval rayT, out HitRecord rec)
     {
         Vec3 oc = Center - ray.Origin;
         var a = ray.Direction.LengthSquared();
@@ -28,10 +28,10 @@ public class Sphere: IHittable
         var sqrtd = Math.Sqrt(discriminant);
         
         var root = (h - sqrtd) / a;
-        if (root <= rayTmin || root >= rayTmax)
+        if (!rayT.Surrounds(root))
         {
             root = (h + sqrtd) / a;
-            if (root <= rayTmin || root >= rayTmax)
+            if (!rayT.Surrounds(root))
             {
                 rec = default;
                 return false;
