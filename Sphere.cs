@@ -1,0 +1,43 @@
+namespace RayTracer;
+
+public class Sphere: IHittable
+{
+    public double Radius { get; set; }
+    public Point3 Center { get; set; }
+
+    public Sphere(Point3 center, double radius)
+    {
+        Center = center;
+        Radius = (radius < 0) ? 0 : radius;
+    }
+
+    public bool Hit(Ray ray, double rayTmin, double rayTmax, HitRecord rec)
+    {
+        Vec3 oc = Center - ray.Origin;
+        var a = ray.Direction.LengthSquared();
+        var h = Vec3.Dot(ray.Direction, oc);
+        var c = oc.LengthSquared() - Radius * Radius;
+
+        var discriminant = h * h - a * c;
+        if (discriminant < 0)
+            return false;
+        var sqrtd = Math.Sqrt(discriminant);
+        
+        var root = (h - sqrtd) / a;
+        if (root <= rayTmin || root >= rayTmax)
+        {
+            root = (h + sqrtd) / a;
+            if (root <= rayTmin || root >= rayTmax)
+            {
+                return false;
+            }
+        }
+
+        rec.T = root;
+        rec.Point = ray.At(rec.T);
+        Vec3 outwardNormal = (rec.Point - Center) / Radius;
+        rec.SetFaceNormal(ray, outwardNormal);
+        return true;
+    }
+    
+}

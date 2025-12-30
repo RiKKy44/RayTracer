@@ -1,6 +1,4 @@
 
-using System;
-
 namespace RayTracer;
 
 //readonly to prevent compiler from making defensive copies when passing vec3 by reference
