@@ -21,5 +21,5 @@ public struct HitRecord
 
 public interface IHittable
 {
-    bool Hit(Ray ray, double rayTmin, double rayTmax, HitRecord rec);
+    bool Hit(in Ray ray, double rayTmin, double rayTmax, out HitRecord rec);
 }
