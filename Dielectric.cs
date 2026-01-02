@@ -20,9 +20,24 @@ public class Dielectric : IMaterial
 
         Vec3 unitDirection = Vec3.UnitVector(rIn.Direction);
 
-        Vec3 refracted = Vec3.Refract(unitDirection, rec.Normal, refractionRatio);
+        double cosTheta = Math.Min(Vec3.Dot(-unitDirection, rec.Normal), 1.0);
 
-        scattered = new Ray(rec.Point,refracted);
+        double sinTheta = Math.Sqrt(1.0 - cosTheta * cosTheta);
+
+        bool cannotRefract = refractionRatio * sinTheta > 1.0;
+
+        Vec3 direction;
+
+        if (cannotRefract)
+        {
+            direction = Vec3.Reflect(unitDirection, rec.Normal);
+        }
+        else
+        {
+            direction = Vec3.Refract(unitDirection, rec.Normal, refractionRatio);
+        }
+           
+        scattered = new Ray(rec.Point,direction);
 
         return true;
     }
