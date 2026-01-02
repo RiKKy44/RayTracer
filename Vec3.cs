@@ -104,4 +104,15 @@ public readonly struct Vec3
     {
         return v - 2 * Dot(v, n) * n;
     }
+
+    public static Vec3 Refract(Vec3 uv, Vec3 n, double etaiOverEtat)
+    {
+        var cosTheta = Math.Min(Vec3.Dot(-uv, n), 1.0);
+
+        Vec3 rOutPerp = etaiOverEtat * (uv + cosTheta * n);
+
+        var rOutParallel = -Math.Sqrt(Math.Abs(1.0 - rOutPerp.LengthSquared())) * n;
+        
+        return rOutPerp + rOutParallel;
+    }
 }
