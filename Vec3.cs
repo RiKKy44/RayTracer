@@ -93,4 +93,10 @@ public readonly struct Vec3
             return -onUnitSphere;
         }
     }
+
+    public bool NearZero()
+    {
+        var s = 1e-8;
+        return (Math.Abs(X) < s) && (Math.Abs(Y) < s) && (Math.Abs(Z) < s);
+    }
 }
