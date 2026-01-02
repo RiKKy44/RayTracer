@@ -23,6 +23,10 @@ public class Camera
 
     public Vec3 VUp { get; set; } = new Vec3(0, 1, 0);
 
+    public double DefocusAngle { get; set; } = 0;
+
+    public double FocusDist { get; set; } = 10;
+
     private int _imageHeight;
 
     private Point3 _center;
@@ -32,6 +36,10 @@ public class Camera
     private Vec3 _pixelDeltaU;
 
     private Vec3 _pixelDeltaV;
+
+    private Vec3 _defocusDiskU;
+
+    private Vec3 _defocusDiskV;
 
     public void Render(IHittable world)
     {
@@ -97,7 +105,7 @@ public class Camera
         var pixelSample = pixelCenter + PixelSampleSquare();
 
 
-        var rayOrigin = _center;
+        var rayOrigin = (DefocusAngle <= 0) ? _center : DefocusDiskSample();
 
         var rayDirection = pixelSample - rayOrigin;
 
@@ -112,13 +120,11 @@ public class Camera
 
         _center = LookFrom;
 
-        var focalLength = 1.0;
-
         var theta = Utils.DegreesToRadians(Vfov);
 
         var h = Math.Tan(theta / 2);
 
-        var viewportHeight = 2.0 * h * focalLength;
+        var viewportHeight = 2.0 * h * FocusDist;
 
         var viewportWidth = viewportHeight * (double)ImageWidth / _imageHeight;
 
@@ -134,8 +140,14 @@ public class Camera
         _pixelDeltaU = viewportU / ImageWidth;
         _pixelDeltaV = viewportV / _imageHeight;
 
-        var viewportUpperLeft = _center - (focalLength * w) - viewportU / 2 - viewportV / 2;
+        var viewportUpperLeft = _center - (FocusDist * w) - viewportU / 2 - viewportV / 2;
+        
         _pixel00Loc = viewportUpperLeft + 0.5 * (_pixelDeltaU + _pixelDeltaV);
+
+        var defocusRadius = FocusDist * Math.Tan(Utils.DegreesToRadians(DefocusAngle / 2));
+
+        _defocusDiskU = u * defocusRadius;
+        _defocusDiskV = v * defocusRadius;
     }
 
     private Vec3 RayColor(Ray ray, int depth, IHittable world)
@@ -159,5 +171,11 @@ public class Camera
         Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
         var a = 0.5 * (unitDirection.Y + 1.0);
         return (1.0 - a) * new Vec3(1.0, 1.0, 1.0) + a * new Vec3(0.5, 0.7, 1.0);
+    }
+
+    private Vec3 DefocusDiskSample()
+    {
+        var p = RandomInUnitDisk();
+        return _center + (p.X * _defocusDiskU) + (p.Y * _defocusDiskV);
     }
 }

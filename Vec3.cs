@@ -115,4 +115,17 @@ public readonly struct Vec3
         
         return rOutPerp + rOutParallel;
     }
+
+    public static Vec3 RandomInUnitDisk()
+    {
+        while (true)
+        {
+            var p = new Vec3(Utils.RandomDouble(-1, 1), Utils.RandomDouble(-1, 1), 0);
+
+            if (p.LengthSquared() < 1)
+            {
+                return p;
+            }
+        }
+    }
 }

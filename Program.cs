@@ -51,7 +51,8 @@ public class Program
         cam.LookFrom = new Point3(-2, 2, 1);
         cam.LookAt = new Point3(0, 0, -1);
         cam.VUp = new Vec3(0, 1, 0);
-
+        cam.DefocusAngle = 10.0;
+        cam.FocusDist = 3.4;
         cam.Render(world);
     }
     
