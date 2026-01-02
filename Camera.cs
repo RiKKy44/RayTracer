@@ -8,13 +8,21 @@ namespace RayTracer;
 public class Camera
 {
     public double AspectRatio { get; set; } = 1.0;
+
     public double ImageWidth { get; set; } = 100;
+
     public int SamplesPerPixel { get; set; } = 10;
 
+    public int MaxDepth { get; set; } = 10;
+
     private int _imageHeight;
+
     private Point3 _center;
+
     private Point3 _pixel00Loc;
+
     private Vec3 _pixelDeltaU;
+
     private Vec3 _pixelDeltaV;
 
     public void Render(IHittable world)
@@ -38,7 +46,7 @@ public class Camera
                 {
                     Ray ray = GetRay(i, j);
 
-                    pixelColor += RayColor(ray, world);
+                    pixelColor += RayColor(ray, MaxDepth, world);
                 }
                 buffer[i, j] = pixelColor;
             }
@@ -111,13 +119,17 @@ public class Camera
         _pixel00Loc = viewportUpperLeft + 0.5 * (_pixelDeltaU + _pixelDeltaV);
     }
 
-    private Vec3 RayColor(Ray ray, IHittable world)
+    private Vec3 RayColor(Ray ray, int depth, IHittable world)
     {
+        if (depth <= 0)
+        {
+            return new Color3(0, 0, 0);
+        }
         HitRecord rec;
         if (world.Hit(ray, new Interval(0, Utils.Infinity), out rec))
         {
             Vec3 direction = Vec3.RandomOnHemisphere(rec.Normal);
-            return 0.5*RayColor(new Ray(rec.Point,direction),world);
+            return 0.5*RayColor(new Ray(rec.Point,direction),depth - 1,world);
         }
 
         Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
