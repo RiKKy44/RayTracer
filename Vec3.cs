@@ -58,4 +58,39 @@ public readonly struct Vec3
     public static Vec3 UnitVector(in Vec3 v) => v / v.Length();
 
     public override string ToString() => $"{X} {Y} {Z}";    
+
+
+    public static Vec3 Random()
+    {
+        return new Vec3(Utils.RandomDouble(), Utils.RandomDouble(), Utils.RandomDouble());
+    }
+
+    public static Vec3 Random(double min, double max) =>
+        new Vec3(Utils.RandomDouble(min,max),Utils.RandomDouble(min,max),Utils.RandomDouble(min,max));
+
+    public static Vec3 RandomUnitVector()
+    {
+        while (true)
+        {
+            var p = Vec3.Random(-1, 1);
+            var lensq = p.LengthSquared();
+            if (lensq <= 1)
+            {
+                return p / Math.Sqrt(lensq);
+            }
+
+        }
+    }
+    public static Vec3 RandomOnHemisphere(Vec3 normal)
+    {
+        Vec3 onUnitSphere = RandomUnitVector();
+        if (Vec3.Dot(onUnitSphere, normal) > 0.0)
+        {
+            return onUnitSphere;
+        }
+        else
+        {
+            return -onUnitSphere;
+        }
+    }
 }
