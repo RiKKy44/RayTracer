@@ -16,9 +16,11 @@ public class Program
 
         var materialCenter = new Lambertian(new Color3(0.1, 0.2, 0.5));
 
-        var materialLeft = new Dielectric(1.00/1.33);
+        var materialLeft = new Dielectric(1.50);
 
-        var materialRight = new Metal(new Color3(0.8, 0.6, 0.2),1.0);
+        var materialBubble = new Dielectric(1.00 / 1.50);
+
+        var materialRight = new Metal(new Color3(0.8, 0.6, 0.2), 1.0);
 
         world.Add(new Sphere(new Point3(0.0, -100.5, -1.0), 100.0, materialGround));
 
@@ -26,8 +28,9 @@ public class Program
 
         world.Add(new Sphere(new Point3(-1.0, 0.0, -1.0), 0.5, materialLeft));
 
-        world.Add(new Sphere(new Point3(1.0, 0.0, -1.0), 0.5, materialRight));
+        world.Add(new Sphere(new Point3(-1.0, 0.0, -1.0), 0.4, materialBubble));
 
+        world.Add(new Sphere(new Point3(1.0, 0.0, -1.0), 0.5, materialRight));
 
 
 
@@ -36,9 +39,19 @@ public class Program
         Camera cam = new Camera();
 
         cam.AspectRatio = 16.0 / 9.0;
+
         cam.ImageWidth = 400;
+
         cam.SamplesPerPixel = 100;
+
         cam.MaxDepth = 50;
+
+        cam.Vfov = 90;
+
+        cam.LookFrom = new Point3(-2, 2, 1);
+        cam.LookAt = new Point3(0, 0, -1);
+        cam.VUp = new Vec3(0, 1, 0);
+
         cam.Render(world);
     }
     

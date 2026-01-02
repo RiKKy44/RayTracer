@@ -15,6 +15,14 @@ public class Camera
 
     public int MaxDepth { get; set; } = 10;
 
+    public double Vfov { get; set; } = 90;
+
+    public Point3 LookFrom { get; set; } = new Point3(0, 0, -1);
+
+    public Point3 LookAt { get; set; } = new Point3(0, 0, 0);
+
+    public Vec3 VUp { get; set; } = new Vec3(0, 1, 0);
+
     private int _imageHeight;
 
     private Point3 _center;
@@ -102,20 +110,31 @@ public class Camera
         _imageHeight = (int)(ImageWidth / AspectRatio);
         _imageHeight = (_imageHeight<1)?1:_imageHeight;
 
-        _center = new Point3(0, 0, 0);
+        _center = LookFrom;
 
         var focalLength = 1.0;
-        var viewportHeight = 2.0;
+
+        var theta = Utils.DegreesToRadians(Vfov);
+
+        var h = Math.Tan(theta / 2);
+
+        var viewportHeight = 2.0 * h * focalLength;
 
         var viewportWidth = viewportHeight * (double)ImageWidth / _imageHeight;
 
-        var viewportU = new Vec3(viewportWidth, 0, 0);
-        var viewportV = new Vec3(0, -viewportHeight, 0);
+        var w = Vec3.UnitVector(LookFrom - LookAt);
+
+        var u = Vec3.UnitVector(Vec3.Cross(VUp, w));
+
+        var v = Vec3.Cross(w, u);
+
+        var viewportU = viewportWidth * u;
+        var viewportV = viewportHeight * -v;
 
         _pixelDeltaU = viewportU / ImageWidth;
         _pixelDeltaV = viewportV / _imageHeight;
 
-        var viewportUpperLeft = _center - new Vec3(0, 0, focalLength) - viewportU / 2 - viewportV / 2;
+        var viewportUpperLeft = _center - (focalLength * w) - viewportU / 2 - viewportV / 2;
         _pixel00Loc = viewportUpperLeft + 0.5 * (_pixelDeltaU + _pixelDeltaV);
     }
 
