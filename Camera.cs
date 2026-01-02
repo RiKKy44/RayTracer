@@ -1,5 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 namespace RayTracer;
 
 
@@ -45,16 +48,17 @@ public class Camera
     {
         Initialize();
        
+        int width = (int)ImageWidth;
         //buffer for pixels,since we use parallel computing we must take care of order
-        Vec3[,] buffer = new Vec3[(int)ImageWidth,_imageHeight];
+        Vec3[,] buffer = new Vec3[(int)width, _imageHeight];
 
-        Console.Error.WriteLine("Rendering...");
+        Console.WriteLine("Rendering...");
 
         var startTime = DateTime.Now;
 
         Parallel.For(0, _imageHeight, j =>
         {
-            for(int i =0; i < ImageWidth; i++)
+            for(int i =0; i < width; i++)
             {
                 Vec3 pixelColor = new Vec3(0, 0, 0);
 
@@ -68,24 +72,41 @@ public class Camera
             }
         });
 
-        Console.Error.WriteLine($"Rendering finished in {(DateTime.Now - startTime).TotalSeconds}\nWriting to file...");
+        Console.Error.WriteLine($"Rendering finished in {(DateTime.Now - startTime).TotalSeconds}\nSaving image...");
 
-        using(StreamWriter writer = new StreamWriter("image.ppm"))
+        using(var image = new Image<Rgb24>(width, _imageHeight))
         {
-            writer.WriteLine("P3");
-            writer.WriteLine($"{ImageWidth} {_imageHeight}");
-            writer.WriteLine("255");
-            
-
-            for(int j = 0; j < _imageHeight; j++)
+            image.ProcessPixelRows(accesor =>
             {
-                for(int i = 0; i < ImageWidth; i++)
+                for (int j = 0; j < _imageHeight; j++)
                 {
-                    Color.WriteColor(writer, buffer[i,j], SamplesPerPixel);
+                    //getting whole row of image pixels
+                    var pixelRow = accesor.GetRowSpan(j);
+                    for (int i = 0; i < width; i++)
+                    {
+                        var color = buffer[i, j];
+
+                        double r = color.X / SamplesPerPixel;
+                        double g = color.Y / SamplesPerPixel;
+                        double b = color.Z / SamplesPerPixel;
+
+                        r = (r > 0) ? Math.Sqrt(r) : 0;
+                        g = (g > 0) ? Math.Sqrt(g) : 0;
+                        b = (b > 0) ? Math.Sqrt(b) : 0;
+
+                        Interval intensity = new Interval(0.000, 0.999);
+                        byte rbyte = (byte)(255.999 * intensity.Clamp(r));
+                        byte gbyte = (byte)(255.999 * intensity.Clamp(g));
+                        byte bbyte = (byte)(255.999 * intensity.Clamp(b));
+
+                        pixelRow[i] = new Rgb24(rbyte, gbyte, bbyte);
+                    }
+
                 }
-            }
-            Console.Error.Write("\nDone");
+            });
+            image.SaveAsJpeg("render.png");
         }
+        Console.WriteLine("Rendering Done! Saved to render.png");
     }
 
 
