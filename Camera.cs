@@ -128,7 +128,7 @@ public class Camera
         HitRecord rec;
         if (world.Hit(ray, new Interval(0.001, Utils.Infinity), out rec))
         {
-            Vec3 direction = Vec3.RandomOnHemisphere(rec.Normal);
+            Vec3 direction = rec.Normal + Vec3.RandomUnitVector();
             return 0.5*RayColor(new Ray(rec.Point,direction),depth - 1,world);
         }
 
