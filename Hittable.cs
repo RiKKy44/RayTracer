@@ -5,9 +5,13 @@ namespace RayTracer;
 public struct HitRecord
 {
     public Point3 Point { get; set; }
+
     public Vec3 Normal { get; set; }
+
     public double T { get; set; }
     
+    public IMaterial Material { get; set; }
+
     public bool FrontFace {get; set;}
 
     //sets the hit record normal vector

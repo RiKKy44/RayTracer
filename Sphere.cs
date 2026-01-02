@@ -4,11 +4,13 @@ public class Sphere: IHittable
 {
     public double Radius { get; set; }
     public Point3 Center { get; set; }
+    public IMaterial Material { get; set; }
 
-    public Sphere(Point3 center, double radius)
+    public Sphere(Point3 center, double radius,IMaterial material)
     {
         Center = center;
         Radius = (radius < 0) ? 0 : radius;
+        Material = material;
     }
 
     public bool Hit(in Ray ray, Interval rayT, out HitRecord rec)
@@ -43,6 +45,7 @@ public class Sphere: IHittable
         rec.Point = ray.At(rec.T);
         Vec3 outwardNormal = (rec.Point - Center) / Radius;
         rec.SetFaceNormal(ray, outwardNormal);
+        rec.Material = Material;
         return true;
     }
     
