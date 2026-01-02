@@ -46,7 +46,7 @@ public class Program
 
         cam.MaxDepth = 50;
 
-        cam.Vfov = 90;
+        cam.Vfov = 20;
 
         cam.LookFrom = new Point3(-2, 2, 1);
         cam.LookAt = new Point3(0, 0, -1);

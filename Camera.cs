@@ -175,7 +175,7 @@ public class Camera
 
     private Vec3 DefocusDiskSample()
     {
-        var p = RandomInUnitDisk();
+        var p = Vec3.RandomInUnitDisk();
         return _center + (p.X * _defocusDiskU) + (p.Y * _defocusDiskV);
     }
 }
