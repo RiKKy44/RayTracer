@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq.Expressions;
 
 namespace RayTracer;
 
@@ -7,8 +8,50 @@ namespace RayTracer;
 public class Program
 {
     
-   public static void Main()
+   public static void Main(string[] args)
     {
+        //default values:
+        int width = 400;
+        int samples = 20;
+        int depth = 10;
+        string filename = "render.jpg";
+
+
+        for (int i = 0; i < args.Length; i++)
+        {
+            try
+            {
+                switch(args[i]){
+                    case "-w":
+                        width = int.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-s":
+                        samples = int.Parse(args[i + 1]);
+                        i++;
+                        break;
+
+                    case "-d":
+                        depth = int.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-f":
+                        filename = args[i + 1];
+                        i++;
+                        break;
+                    }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"Error while reading parameter {args[i]}. Program will use default values");
+            }
+        
+        }
+        Console.WriteLine($"Rendering: {width}px width, {samples} samples, {depth} depth --> {filename}");
+
+
+
+
         HittableList world = new HittableList();
 
 
@@ -49,7 +92,7 @@ public class Program
         cam.VUp = new Vec3(0, 1, 0);
         cam.DefocusAngle = 10.0;
         cam.FocusDist = 3.4;
-        cam.Render(world);
+        cam.Render(world,filename);
     }
     
 }

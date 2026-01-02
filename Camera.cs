@@ -44,7 +44,7 @@ public class Camera
 
     private Vec3 _defocusDiskV;
 
-    public void Render(IHittable world)
+    public void Render(IHittable world, string outputFile)
     {
         Initialize();
        
@@ -104,9 +104,9 @@ public class Camera
 
                 }
             });
-            image.SaveAsJpeg("render.png");
+            image.SaveAsJpeg(outputFile);
         }
-        Console.WriteLine("Rendering Done! Saved to render.png");
+        Console.WriteLine($"Rendering Done! Saved to {outputFile}");
     }
 
 
