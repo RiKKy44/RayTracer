@@ -4,12 +4,20 @@ namespace RayTracer;
 
 public static class Color
 {
+    public static double LinearToGamma(double linearComponent)
+    {
+        if(linearComponent > 0) return Math.Sqrt(linearComponent);
+        return 0;
+    }
     public static void WriteColor(StreamWriter writer, Vec3 color, int samplesPerPixel)
     {
         double r = color.X / samplesPerPixel;
         double g = color.Y / samplesPerPixel;
         double b = color.Z / samplesPerPixel;
 
+        r = LinearToGamma(r);
+        g = LinearToGamma(g);
+        b = LinearToGamma(b);
 
         Interval intensity = new Interval(0.000, 0.999); 
         int rbyte = (int)(256 * intensity.Clamp(r));

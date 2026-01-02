@@ -129,7 +129,7 @@ public class Camera
         if (world.Hit(ray, new Interval(0.001, Utils.Infinity), out rec))
         {
             Vec3 direction = rec.Normal + Vec3.RandomUnitVector();
-            return 0.5*RayColor(new Ray(rec.Point,direction),depth - 1,world);
+            return 0.1*RayColor(new Ray(rec.Point,direction),depth - 1,world);
         }
 
         Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
