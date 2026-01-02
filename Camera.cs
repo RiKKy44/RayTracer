@@ -9,7 +9,7 @@ public class Camera
 {
     public double AspectRatio { get; set; } = 1.0;
     public double ImageWidth { get; set; } = 100;
-
+    public int SamplesPerPixel { get; set; } = 10;
 
     private int _imageHeight;
     private Point3 _center;
@@ -32,16 +32,19 @@ public class Camera
         {
             for(int i =0; i < ImageWidth; i++)
             {
-                var pixelCenter = _pixel00Loc + (i * _pixelDeltaU) + (j * _pixelDeltaV);
-                var rayDirection = pixelCenter - _center;
-                Ray ray = new Ray(_center, rayDirection);
+                Vec3 pixelColor = new Vec3(0, 0, 0);
 
-                Vec3 pixelColor = RayColor(ray, world);
-                buffer[i,j] = pixelColor;
+                for (int sample = 0; sample < SamplesPerPixel; sample++)
+                {
+                    Ray ray = GetRay(i, j);
+
+                    pixelColor += RayColor(ray, world);
+                }
+                buffer[i, j] = pixelColor;
             }
         });
 
-        Console.Error.WriteLine($"Rendering finished in {(DateTime.Now - startTime).TotalSeconds}");
+        Console.Error.WriteLine($"Rendering finished in {(DateTime.Now - startTime).TotalSeconds}\nWriting to file...");
 
         using(StreamWriter writer = new StreamWriter("image.ppm"))
         {
@@ -54,12 +57,38 @@ public class Camera
             {
                 for(int i = 0; i < ImageWidth; i++)
                 {
-                    Color.WriteColor(writer, buffer[i,j]);
+                    Color.WriteColor(writer, buffer[i,j], SamplesPerPixel);
                 }
             }
             Console.Error.Write("\nDone");
         }
     }
+
+
+    private Vec3 PixelSampleSquare()
+    {
+        var px = -0.5 + Utils.RandomDouble();
+        var py = -0.5 + Utils.RandomDouble();
+
+        return (px * _pixelDeltaU) + (py * _pixelDeltaV);
+    }
+
+
+    private Ray GetRay(int i, int j)
+    {
+        var pixelCenter = _pixel00Loc + (i*_pixelDeltaU) + (j * _pixelDeltaV);
+
+        var pixelSample = pixelCenter + PixelSampleSquare();
+
+
+        var rayOrigin = _center;
+
+        var rayDirection = pixelSample - rayOrigin;
+
+        return new Ray(rayOrigin, rayDirection);
+    }
+
+
     private void Initialize()
     {
         _imageHeight = (int)(ImageWidth / AspectRatio);

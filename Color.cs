@@ -17,7 +17,6 @@ public static class Color
         int bbyte = (int)(256 * intensity.Clamp(b));
         
         writer.WriteLine($"{rbyte} {gbyte} {bbyte}");
-        
     }
 } 
 
