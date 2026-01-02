@@ -16,7 +16,7 @@ public class Program
 
         var materialCenter = new Lambertian(new Color3(0.1, 0.2, 0.5));
 
-        var materialLeft = new Metal(new Color3(0.8, 0.8, 0.8),0.3);
+        var materialLeft = new Dielectric(1.50);
 
         var materialRight = new Metal(new Color3(0.8, 0.6, 0.2),1.0);
 
