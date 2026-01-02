@@ -1,7 +1,6 @@
 
 namespace RayTracer;
-
-//readonly to prevent compiler from making defensive copies when passing vec3 by reference
+// Marked as readonly to prevent defensive copies when passing by reference.
 public readonly struct Vec3
 {
     public double X { get; }
@@ -35,15 +34,15 @@ public readonly struct Vec3
     public static Vec3 operator +(in Vec3 v1, in Vec3 v2) => new Vec3(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
     
     public static Vec3 operator -(in Vec3 v1, in Vec3 v2)=> new Vec3(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);
-    //scalar multiplication
+    
     public static Vec3 operator *(in Vec3 v, double s) => new Vec3(v.X * s, v.Y * s, v.Z * s);
     
-    //commutative scalar multiplication
     public static Vec3 operator *(double s, in Vec3 v) => v * s;
     
     public static Vec3 operator /(in Vec3 v, double s) => new Vec3(v.X / s, v.Y / s, v.Z / s);
-    //hadamard product
+    
     public static Vec3 operator *(in Vec3 v1, in Vec3 v2) => new Vec3(v1.X*v2.X, v1.Y*v2.Y, v1.Z*v2.Z);
+   
     public double Length() => Math.Sqrt(X * X + Y * Y + Z * Z);
     
     public double LengthSquared() => X * X + Y * Y + Z * Z;
@@ -81,6 +80,7 @@ public readonly struct Vec3
 
         }
     }
+
     public static Vec3 RandomOnHemisphere(Vec3 normal)
     {
         Vec3 onUnitSphere = RandomUnitVector();

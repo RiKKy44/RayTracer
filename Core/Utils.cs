@@ -13,10 +13,9 @@ public static class Utils
         return degrees * Math.PI / 180.0;
     }
     
-    //Random.Shared is used in random functions because it is thread safe
     public static double RandomDouble()
     {
-        
+        // Use the thread-safe Random.Shared to avoid race conditions in parallel rendering
         return Random.Shared.NextDouble();
     }
 

@@ -49,13 +49,13 @@ public class Camera
         Initialize();
        
         int width = (int)ImageWidth;
-        //buffer for pixels,since we use parallel computing we must take care of order
+        // Temporary Buffer for pixels, as threads calculate them  out of order
         Vec3[,] buffer = new Vec3[(int)width, _imageHeight];
 
         Console.WriteLine("Rendering...");
 
         var startTime = DateTime.Now;
-
+        // Use Parallel.For to utilize all CPU cores for faster rendering
         Parallel.For(0, _imageHeight, j =>
         {
             for(int i =0; i < width; i++)
@@ -80,7 +80,7 @@ public class Camera
             {
                 for (int j = 0; j < _imageHeight; j++)
                 {
-                    //getting whole row of image pixels
+                   
                     var pixelRow = accesor.GetRowSpan(j);
                     for (int i = 0; i < width; i++)
                     {
@@ -173,11 +173,13 @@ public class Camera
 
     private Vec3 RayColor(Ray ray, int depth, IHittable world)
     {
+        // If we've exceeded the ray bounce limit, no more light is gathered
         if (depth <= 0)
         {
             return new Color3(0, 0, 0);
         }
         HitRecord rec;
+        // Ignore hits very close to zero to fix "shadow acne"
         if (world.Hit(ray, new Interval(0.001, Utils.Infinity), out rec))
         {
             Ray scattered;

@@ -41,7 +41,7 @@ public class Dielectric : IMaterial
 
         return true;
     }
-
+    // Schlick's approximation for the Fresnel factor
     private static double Reflectance(double cosine, double refIdx)
     {
         var r0 = (1 - refIdx) / (1 + refIdx);

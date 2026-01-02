@@ -483,14 +483,14 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
-# --- JetBrains Rider specific ---
+# JetBrains Rider specific
 .idea/
 *.sln.iml
 
-# --- macOS specific ---
+# macOS specific 
 .DS_Store
 
-# --- Ray Tracing Output Images---
+# Ray Tracing Output Images
 *.ppm
 *.png
 *.jpg
