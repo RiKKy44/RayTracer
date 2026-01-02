@@ -17,8 +17,16 @@ public struct Interval
 
     public bool Surrounds(double x) => x > Min && x < Max;
     
+    public double Clamp(double x)
+    {
+        if (x < Min) return Min;
+        if (x > Max) return Max;
+        return x;
+    }
+    //Constants
     public static readonly Interval Empty = new Interval(double.PositiveInfinity, double.NegativeInfinity);
     
     public static readonly Interval Universe = new Interval(double.NegativeInfinity, double.PositiveInfinity);
+
 
 }
