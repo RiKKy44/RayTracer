@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 namespace RayTracer;
 
 
@@ -18,8 +19,29 @@ public class Camera
 
     public void Render(IHittable world)
     {
-        this.Initialize();
+        Initialize();
+       
+        //buffer for pixels,since we use parallel computing we must take care of order
+        Vec3[,] buffer = new Vec3[(int)ImageWidth,_imageHeight];
 
+        Console.Error.WriteLine("Rendering...");
+
+        var startTime = DateTime.Now;
+
+        Parallel.For(0, _imageHeight, j =>
+        {
+            for(int i =0; i < ImageWidth; i++)
+            {
+                var pixelCenter = _pixel00Loc + (i * _pixelDeltaU) + (j * _pixelDeltaV);
+                var rayDirection = pixelCenter - _center;
+                Ray ray = new Ray(_center, rayDirection);
+
+                Vec3 pixelColor = RayColor(ray, world);
+                buffer[i,j] = pixelColor;
+            }
+        });
+
+        Console.Error.WriteLine($"Rendering finished in {(DateTime.Now - startTime).TotalSeconds}");
 
         using(StreamWriter writer = new StreamWriter("image.ppm"))
         {
@@ -30,25 +52,14 @@ public class Camera
 
             for(int j = 0; j < _imageHeight; j++)
             {
-                Console.Error.Write($"\rScanlines remaining: {_imageHeight - j} ");
                 for(int i = 0; i < ImageWidth; i++)
                 {
-                    var pixelCenter = _pixel00Loc + (i * _pixelDeltaU) + (j * _pixelDeltaV);
-                    var rayDirection = pixelCenter - _center;
-                    Ray ray = new Ray(_center, rayDirection);
-
-                    Vec3 pixelColor = RayColor(ray, world);
-
-                    Color.WriteColor(writer, pixelColor);
+                    Color.WriteColor(writer, buffer[i,j]);
                 }
-
-
-                Console.Error.Write("\nDone");
             }
+            Console.Error.Write("\nDone");
         }
     }
-
-
     private void Initialize()
     {
         _imageHeight = (int)(ImageWidth / AspectRatio);
