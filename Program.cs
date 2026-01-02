@@ -16,13 +16,16 @@ public class Program
 
         var materialCenter = new Lambertian(new Color3(0.1, 0.2, 0.5));
 
-        var materialLeft = new Metal(new Color3(0.8, 0.8, 0.8));
+        var materialLeft = new Metal(new Color3(0.8, 0.8, 0.8),0.3);
 
-        var materialRight = new Metal(new Color3(0.8, 0.6, 0.2));
+        var materialRight = new Metal(new Color3(0.8, 0.6, 0.2),1.0);
 
         world.Add(new Sphere(new Point3(0.0, -100.5, -1.0), 100.0, materialGround));
+
         world.Add(new Sphere(new Point3(0.0, 0.0, -1.2), 0.5, materialCenter));
+
         world.Add(new Sphere(new Point3(-1.0, 0.0, -1.0), 0.5, materialLeft));
+
         world.Add(new Sphere(new Point3(1.0, 0.0, -1.0), 0.5, materialRight));
 
 
