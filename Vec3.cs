@@ -99,4 +99,9 @@ public readonly struct Vec3
         var s = 1e-8;
         return (Math.Abs(X) < s) && (Math.Abs(Y) < s) && (Math.Abs(Z) < s);
     }
+
+    public static Vec3 Reflect(Vec3 v, Vec3 n)
+    {
+        return v - 2 * Dot(v, n) * n;
+    }
 }
