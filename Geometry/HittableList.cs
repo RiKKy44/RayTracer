@@ -1,4 +1,5 @@
-namespace RayTracer;
+namespace RayTracer.Geometry;
+
 
 
 public class HittableList : IHittable

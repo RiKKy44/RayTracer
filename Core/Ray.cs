@@ -1,5 +1,5 @@
+namespace RayTracer.Core;
 
-namespace RayTracer;
 
 public readonly struct Ray
 {

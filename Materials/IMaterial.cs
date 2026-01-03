@@ -1,4 +1,4 @@
-namespace RayTracer;
+namespace RayTracer.Materials;
 
 
 public interface IMaterial

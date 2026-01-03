@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq.Expressions;
-
-namespace RayTracer;
-
+﻿namespace RayTracer;
 
 public class Program
 {

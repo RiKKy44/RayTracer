@@ -1,9 +1,7 @@
-using System;
-using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-namespace RayTracer;
+namespace RayTracer.Rendering;
 
 
 

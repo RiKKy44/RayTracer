@@ -1,3 +1,5 @@
+namespace RayTracer.Geometry;
+
 public struct HitRecord
 {
     public Point3 Point { get; set; }

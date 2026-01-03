@@ -1,6 +1,5 @@
-using System;
+namespace RayTracer.Geometry;
 
-namespace RayTracer;
 
 public interface IHittable
 {

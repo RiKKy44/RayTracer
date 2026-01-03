@@ -1,6 +1,4 @@
-using System;
-
-namespace RayTracer;
+namespace RayTracer.Materials;
 
 
 public class Dielectric : IMaterial

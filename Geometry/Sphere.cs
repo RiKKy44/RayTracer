@@ -1,4 +1,4 @@
-namespace RayTracer;
+namespace RayTracer.Geometry;
 
 public class Sphere: IHittable
 {

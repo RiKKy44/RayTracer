@@ -1,5 +1,4 @@
-
-namespace RayTracer;
+namespace RayTracer.Core;
 // Marked as readonly to prevent defensive copies when passing by reference.
 public readonly struct Vec3
 {
